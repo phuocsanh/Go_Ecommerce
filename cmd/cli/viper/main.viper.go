@@ -32,5 +32,16 @@ func main(){
 	// read server configuration
 	
 	fmt.Println("Server port:: ", viper.GetInt("server.port"))
-	fmt.Println("Server port:: ", viper.GetString("security.jwt.key"))
+	fmt.Println("Server security.jwt.key:: ", viper.GetString("security.jwt.key"))
+
+	// configure stucture
+	var config Config
+	if err := viper.Unmarshal(&config); err != nil {
+		fmt.Printf("Failed to unmarshal configuration: %v \n", err)
+	}
+	fmt.Println("Port configurations:: ", config.Server.Port)
+
+	for _,db := range config.Databases {
+		fmt.Printf("Database:: User: %s, Password: %s, Host: %s \n", db.User, db.Password, db.Host)
+	}
 }
