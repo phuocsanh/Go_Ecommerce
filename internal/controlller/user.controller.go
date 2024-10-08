@@ -2,7 +2,7 @@ package controlller
 
 import (
 	"go_ecommerce/internal/service"
-	"go_ecommerce/response"
+	"go_ecommerce/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
