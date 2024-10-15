@@ -3,54 +3,62 @@ package logger
 import (
 	"os"
 
-	"github.com/natefinch/lumberjack"
+	"go_ecommerce/pkg/setting"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
+
 type LoggerZap struct {
 	*zap.Logger
 }
-func NewLogger() *LoggerZap{
-	logLevel := "debug"
-	// debug->info->warning->error->fatal->panic
-	var level zapcore.Level
-	switch logLevel{
-		case "debug":
-            level = zapcore.DebugLevel
-        case "info":
-            level = zapcore.InfoLevel
-        case "warning":
-            level = zapcore.WarnLevel
-        case "error":
-            level = zapcore.ErrorLevel
-        case "fatal":
-            level = zapcore.FatalLevel
-        case "panic":
-            level = zapcore.PanicLevel
-        default:
-            level = zapcore.InfoLevel
-	}
-	endCoder:= getEndCoderLog()
-	hook := lumberjack.Logger{
-		Filename:   "./storages/logs/dev.xxx.log",
-    MaxSize:    500, // megabytes
-    MaxBackups: 3,
-    MaxAge:     28, //days
-    Compress:   true, // disabled by default
-	}
-	core :=  zapcore.NewCore(endCoder,zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout),zapcore.AddSync(&hook)), level )
-	// logger := zap.New(core, zap.AddCaller())
-	return &LoggerZap{zap.New(core,zap.AddCaller(),zap.AddStacktrace(zap.ErrorLevel))}
 
+func NewLogger(config setting.LoggerSetting) *LoggerZap {
+	logLevel := config.Log_level
+	// debug -> info -> warn -> error -> fatal -> panic
+	var level zapcore.Level
+	switch logLevel {
+	case "debug":
+		level = zapcore.DebugLevel
+	case "info":
+		level = zapcore.InfoLevel
+	case "warn":
+		level = zapcore.WarnLevel
+	case "error":
+		level = zapcore.ErrorLevel
+	default:
+		level = zapcore.InfoLevel
+	}
+	encoder := getEncoderLog()
+	hook := lumberjack.Logger{
+		Filename:   config.File_log_name,
+		MaxSize:    config.Max_size, // megabytes
+		MaxBackups: config.Max_backups,
+		MaxAge:     config.Max_age,  //days
+		Compress:   config.Compress, // disabled by default
+	}
+	core := zapcore.NewCore(
+		encoder,
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)),
+		level,
+	)
+
+	return &LoggerZap{zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
 }
 
-func getEndCoderLog() zapcore.Encoder {
+// format logs a message
+func getEncoderLog() zapcore.Encoder {
+	encodeConfig := zap.NewProductionEncoderConfig()
 
-	endCodeConfig := zap.NewProductionEncoderConfig()
-	endCodeConfig.EncodeTime = zapcore.ISO8601TimeEncoder // timetamps 1721898691.973886 ->  2024-07-25T16:11:31.956+0700  
-	endCodeConfig.TimeKey = "time" // ts -> time
-	endCodeConfig.EncodeLevel = zapcore.CapitalLevelEncoder // info -> INFO
-	endCodeConfig.EncodeCaller = zapcore.ShortCallerEncoder // cli/main.log.go:19
-	return zapcore.NewJSONEncoder(endCodeConfig)
+	// 1726651416.1669984 -> 2024-09-18T16:23:36.166+0700
+	encodeConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	// ts -> time
+	encodeConfig.TimeKey = "time"
+	// from info INFO
+	encodeConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+	// "caller":"cli/main.log.go:21"
+	encodeConfig.EncodeCaller = zapcore.ShortCallerEncoder
 
+	return zapcore.NewJSONEncoder(encodeConfig)
 }
