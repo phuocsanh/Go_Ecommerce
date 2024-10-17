@@ -38,6 +38,8 @@ func NewLogger(config setting.LoggerSetting) *LoggerZap {
 		MaxAge:     config.Max_age,  //days
 		Compress:   config.Compress, // disabled by default
 	}
+
+	
 	core := zapcore.NewCore(
 		encoder,
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)),

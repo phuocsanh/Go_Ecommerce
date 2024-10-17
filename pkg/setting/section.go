@@ -1,7 +1,13 @@
 package setting
 type Config struct {
+Server ServerSetting `mapstructure:"server"`	
 Mysql MySQLSetting `mapstructure:"mysql"`
 Logger LoggerSetting `mapstructure:"logger"`
+}
+
+type ServerSetting struct {
+	Port int `mapstructure:"port"`
+	Mode string `mapstructure:"mode"`
 }
 type MySQLSetting struct {
 	Host string `mapstructure:"host"`
