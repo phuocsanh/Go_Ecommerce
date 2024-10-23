@@ -1,4 +1,4 @@
-package manage
+package manager
 
 type ManageRouterGroup struct{
 	UserRouter

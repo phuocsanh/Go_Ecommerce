@@ -1,14 +1,14 @@
 package routers
 
 import (
-	"go_ecommerce/internal/routers/manage"
+	"go_ecommerce/internal/routers/manager"
 	"go_ecommerce/internal/routers/user"
 )
 
 
 type RouterGroup struct{
 	User user.UserRouterGroup
-	Manage manage.ManageRouterGroup
+	Manager manager.ManageRouterGroup
 }
 
 var RouterGroupApp = new(RouterGroup)

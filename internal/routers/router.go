@@ -1,24 +1,32 @@
 package routers
 
-import (
-	// c "go_ecommerce/internal/controlller"
-	"go_ecommerce/middlewares"
+// import (
+// 	// c "go_ecommerce/internal/controlller"
+// 	"go_ecommerce/internal/routers"
+// 	"go_ecommerce/middlewares"
 
-	"github.com/gin-gonic/gin"
-)
+// 	"github.com/gin-gonic/gin"
+// )
 
-func NewRouter() *gin.Engine {
-r := gin.Default()
-r.Use(middlewares.AuthenMiddleware())
+// func NewRouter() *gin.Engine {
+// r := gin.Default()
+// r.Use(middlewares.AuthenMiddleware())
 
-// v1 := r.Group("v1/2024")
-{
-	// v1.GET("/getUser",c.NewUserController().GetUserByID)
-}
-// v2 := r.Group("v2/2024")
-// {
-// 	v2.GET("/ping",Pong)
+// managerRouter := routers.RouterGroupApp.Manager
+// 	userRouter := routers.RouterGroupApp.User
+
+// 	MainGroup := r.Group("/v1")
+// 	{
+// 		MainGroup.GET("/check_status") // tracking monitor
+// 	}
+// 	{
+// 		managerRouter.InitUserRouter(MainGroup)
+// 		managerRouter.InitAdminRouter(MainGroup)
+// 	}
+// 	{
+// 		userRouter.InitUserRouter(MainGroup)
+// 		userRouter.InitProductRouter(MainGroup)
+// 	}
+// return r
 // }
-return r
-}
 
