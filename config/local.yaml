@@ -1,5 +1,6 @@
 server:
   port: 8082
+  mode: dev
 mysql:
   host: 127.0.0.1
   port: 3306
@@ -9,10 +10,11 @@ mysql:
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifetime: 3600
-log:
+
+logger:
   log_level: debug
   file_log_name: "./storages/logs/dev.001.log"
   max_size: 500 # megabytes
   max_backups: 3
   max_age: 28 # days
-  compress: true # disabled by default
+  compress: true

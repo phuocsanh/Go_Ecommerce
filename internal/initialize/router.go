@@ -1,14 +1,21 @@
 package initialize
 
 import (
-	"go_ecommerce/middlewares"
+	"go_ecommerce/global"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
-r := gin.Default()
-r.Use(middlewares.AuthenMiddleware())
+	var r  *gin.Engine
+	if global.Config.Server.Mode == "dev" {
+		gin.SetMode((gin.DebugMode))
+		gin.ForceConsoleColor()
+		r = gin.Default()
+	} else {
+		gin.SetMode((gin.ReleaseMode))
+		r =gin.New()
+	}
 
 // v1 := r.Group("v1/2024")
 // {
@@ -21,3 +28,4 @@ r.Use(middlewares.AuthenMiddleware())
 return r
 }
 
+ 

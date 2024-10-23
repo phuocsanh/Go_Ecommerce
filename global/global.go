@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-var(
-	Config setting.Config
-	Logger *logger.LoggerZap
-	Mdb    *gorm.DB
+var (
+	Config  setting.Config
+	Logger  *logger.LoggerZap
+	Mdb    	*gorm.DB
 )

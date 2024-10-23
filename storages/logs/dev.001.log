@@ -1,0 +1,6 @@
+{"level":"DEBUG","time":"2024-10-16T10:07:22.245+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-16T10:07:22.254+0700","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-16T14:26:23.906+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-16T14:26:23.974+0700","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-16T14:26:49.709+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-16T14:26:49.722+0700","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}

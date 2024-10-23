@@ -26,7 +26,7 @@ func LoadConfig(){
 
 	// configure stucture
 	
-	if err := viper.Unmarshal(&global.Config); err != nil {
+	if err = viper.Unmarshal(&global.Config); err != nil {
 		fmt.Printf("Failed to unmarshal configuration: %v \n", err)
 	}
 }
