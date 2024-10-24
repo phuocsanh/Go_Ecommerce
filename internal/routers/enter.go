@@ -8,7 +8,7 @@ import (
 
 type RouterGroup struct{
 	User user.UserRouterGroup
-	Manager manager.ManageRouterGroup
+	Manager manager.ManagerRouterGroup
 }
 
 var RouterGroupApp = new(RouterGroup)

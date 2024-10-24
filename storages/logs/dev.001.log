@@ -4,3 +4,13 @@
 {"level":"INFO","time":"2024-10-16T14:26:23.974+0700","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
 {"level":"DEBUG","time":"2024-10-16T14:26:49.709+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
 {"level":"INFO","time":"2024-10-16T14:26:49.722+0700","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-24T22:46:39.430+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-24T22:46:39.435+0700","caller":"initialize/mysql.go:35","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-24T22:47:02.620+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-24T22:47:02.624+0700","caller":"initialize/mysql.go:35","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-24T22:50:51.245+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-24T22:50:51.251+0700","caller":"initialize/mysql.go:35","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-24T22:51:33.835+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-24T22:51:33.841+0700","caller":"initialize/mysql.go:35","msg":"MySQL Initialized Successfully"}
+{"level":"DEBUG","time":"2024-10-24T22:55:36.284+0700","caller":"initialize/run.go:15","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-10-24T22:55:36.290+0700","caller":"initialize/mysql.go:35","msg":"MySQL Initialized Successfully"}
