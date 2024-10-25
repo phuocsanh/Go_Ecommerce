@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 	"go_ecommerce/global"
-	"go_ecommerce/internal/po"
+	"go_ecommerce/internal/model"
 	"time"
 
 	"go.uber.org/zap"
@@ -39,10 +39,10 @@ func InitMysql() {
 	// Set connection pool settings
 	// A pool is a set of pre-maintained connections that improve performance.
 	setPool()
-	// genTableDAO()
+	genTableDAO()
 
 	// Run migrations
-	// migrateTables()
+	migrateTables()
 }
 
 // setPool sets the MySQL connection pool settings
@@ -59,14 +59,16 @@ func setPool() {
 
 func genTableDAO()  {
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "../internal/models",
+		OutPath: "./internal/model",
 		Mode: gen.WithoutContext|gen.WithDefaultQuery|gen.WithQueryInterface, // generate mode
 	  })
 	
 	  // gormdb, _ := gorm.Open(mysql.Open("root:@(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
 	  g.UseDB(global.Mdb) // reuse your gorm db
 		// g.GenerateAllTable()
-	  g.GenerateModel("go_crm_user")
+		 g.GenerateModel("go_crm_user")
+
+		// fmt.Println("go_crm_user_v2",genner )
 	  	// Generate basic type-safe DAO API for struct `model.User` following conventions
 		//   g.ApplyBasic(model.User{})
 	
@@ -80,8 +82,9 @@ func genTableDAO()  {
 // migrateTables runs database migrations
 func migrateTables() {
 err:= global.Mdb.AutoMigrate(
-	&po.User{},
-	&po.Role{},
+	// &po.User{},
+	// &po.Role{},
+	&model.GoCrmUserV2{},
  )
  if err != nil {
 	fmt.Println("Migration table failed", err)
