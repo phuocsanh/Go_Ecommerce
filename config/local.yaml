@@ -2,7 +2,7 @@ server:
   port: 8082
   mode: dev
 mysql:
-  host: 127.0.0.1
+  host: mysql_ecommerce_sq
   port: 3306
   username: root
   password: 123456
@@ -10,6 +10,13 @@ mysql:
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifetime: 3600
+
+redis:
+  host: redis_ecommerce_sq # 127.0.0.1
+  port: 6379
+  password: # no pw set
+  db: 0 # use default db
+  pool_size: 10 # max connect to redis
 
 logger:
   log_level: debug

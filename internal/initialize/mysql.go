@@ -3,22 +3,22 @@ package initialize
 import (
 	"fmt"
 	"go_ecommerce/global"
+	"go_ecommerce/internal/common"
 	"go_ecommerce/internal/model"
 	"time"
 
-	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
 
-// checkErrorPanic logs the error and panics if the error is not nil
-func CheckErrorPanic(err error, errString string) {
-	if err != nil {
-		global.Logger.Error(errString, zap.Error(err))
-		panic(err)
-	}
-}
+// // checkErrorPanic logs the error and panics if the error is not nil
+// func CheckErrorPanic(err error, errString string) {
+// 	if err != nil {
+// 		global.Logger.Error(errString, zap.Error(err))
+// 		panic(err)
+// 	}
+// }
 
 
 func InitMysql() {
@@ -30,7 +30,7 @@ func InitMysql() {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
 	})
-	CheckErrorPanic(err, "Failed to initialize MySQL")
+	common.CheckErrorPanic(err, "Failed to initialize MySQL")
 
 	global.Logger.Info("MySQL Initialized Successfully")
 	global.Mdb = db
@@ -49,7 +49,7 @@ func InitMysql() {
 func setPool() {
 	m := global.Config.Mysql
 	sqlDb, err := global.Mdb.DB()
-	CheckErrorPanic(err, "Failed to get SQL DB from GORM")
+	common.CheckErrorPanic(err, "Failed to get SQL DB from GORM")
 
 	// Set connection pool configurations
 	sqlDb.SetConnMaxIdleTime(time.Duration(m.MaxIdleConns) * time.Second)
