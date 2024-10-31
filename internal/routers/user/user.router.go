@@ -29,7 +29,7 @@ func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup){
 		*/
 
 		//Dùng dependency injection by wire
-		userRouterPublic.POST("register", userController.Register)
+		userRouterPublic.POST("/register", userController.Register)
 		userRouterPublic.POST("/otp")
 	}
 	// private router

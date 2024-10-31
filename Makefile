@@ -8,7 +8,7 @@ build:
 	go build -o bin/migration_app ./cmd/$(APP_NAME)/
 
 dev:
-	docker-compose up && go run ./cmd/$(APP_NAME)
+	 docker-compose up && go run ./cmd/$(APP_NAME)
 
 kill:
 	docker-compose kill
