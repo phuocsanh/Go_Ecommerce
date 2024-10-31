@@ -13,6 +13,7 @@ import (
 func InitUserRouterHandler()(*controlller.UserController, error)  {
 	wire.Build(
 		repo.NewUserRepository,
+		repo.NewUserAuthRepository,
 		service.NewUserService,
 		controlller.NewUserController,
 	)
