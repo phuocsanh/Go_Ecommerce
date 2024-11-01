@@ -9,21 +9,28 @@ require (
 )
 
 require (
+	github.com/jackc/pgx/v5 v5.7.1 // indirect
+	github.com/microsoft/go-mssqldb v1.7.2 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+)
+
+require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
-	github.com/google/wire v0.6.0 // indirect
+	github.com/google/wire v0.6.0
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
-	github.com/redis/go-redis/v9 v9.7.0 // indirect
-	github.com/segmentio/kafka-go v0.4.47 // indirect
+	github.com/redis/go-redis/v9 v9.7.0
+	github.com/segmentio/kafka-go v0.4.47
+	github.com/sendgrid/rest v2.6.9+incompatible // indirect
+	github.com/sendgrid/sendgrid-go v3.16.0+incompatible
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/tools v0.26.0 // indirect
 	gorm.io/datatypes v1.2.4 // indirect
-	gorm.io/gen v0.3.26 // indirect
+	gorm.io/gen v0.3.26
 	gorm.io/hints v1.1.2 // indirect
 	gorm.io/plugin/dbresolver v1.5.3 // indirect
 )
@@ -70,7 +77,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.28.0 // indirect
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect

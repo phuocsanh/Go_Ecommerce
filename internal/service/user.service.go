@@ -7,6 +7,7 @@ import (
 	"go_ecommerce/internal/utils/random"
 	"go_ecommerce/internal/utils/sendto"
 	"go_ecommerce/pkg/response"
+	"os"
 	"strconv"
 	"time"
 )
@@ -51,12 +52,11 @@ func (us *userService) Register(email string, purpose string) int {
 
 	// 5. Save otp in redis with expiration	time 
 	err:= us.userAuthRepo.AddOtp(hashEmail, otp, int64(10 * time.Minute) )
-	fmt.Print("err sendto", err)
 	if( err != nil){
 		return response.ErrInvalidOtp
 	}
 	// 6. Send email otp
-	err = sendto.SendTextEmailOtp([]string{email}, "phuocsanh61688@gmail.com",strconv.Itoa(otp))
+	err = sendto.SendTextEmailOtp([]string{email},os.Getenv("SENDER_EMAIL"),strconv.Itoa(otp))
 	
 	if err != nil{
 		return response.ErrSendEmailOtp

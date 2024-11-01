@@ -1,6 +1,7 @@
 package global
 
 import (
+	"database/sql"
 	"go_ecommerce/pkg/logger"
 	"go_ecommerce/pkg/setting"
 
@@ -11,6 +12,7 @@ import (
 var (
 	Config  setting.Config
 	Logger  *logger.LoggerZap
-	Rdb    *redis.Client
+	Rdb    	*redis.Client
 	Mdb    	*gorm.DB
+	Mdbc   	*sql.DB
 )

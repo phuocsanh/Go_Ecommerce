@@ -5,6 +5,6 @@ POST http://localhost:8002/v1/user/register
 Content-Type: application/json
 
 {
-    "email" : "phuocsanhst@gmail.com",
+    "email" : "shanktps09@gmail.com",
     "purpose" : "test"
 }

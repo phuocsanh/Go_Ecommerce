@@ -1,20 +1,14 @@
 package sendto
 
 import (
-	"crypto/tls"
 	"fmt"
 	"go_ecommerce/global"
-	"net/smtp"
-	"strings"
+	"log"
+	"os"
 
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"go.uber.org/zap"
-)
-
-const (
-	SMTPHost     = "smtp.gmail.com"
-	SMTPPort     = "587"
-	SMTPName     = "phuocsanh61688@gmail.com"
-	SMTPPassword = "0919461688Tp$"
 )
 
 type EmailAddress struct {
@@ -29,78 +23,37 @@ type Mail struct {
 	Body    string
 }
 
-func BuilderMessage(mail Mail) string {
-	msg := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\r\n"
-	msg += fmt.Sprintf("From: %s\r\n", mail.From.Address)
-	msg += fmt.Sprintf("To: %s\r\n", strings.Join(mail.To, ";"))
-	msg += fmt.Sprintf("Subject: %s\r\n", mail.Subject)
-	msg += fmt.Sprintf("\r\n%s\r\n", mail.Body)
-	return msg
-}
-
 func SendTextEmailOtp(to []string, from string, otp string) error {
+
+
 	contentEmail := Mail{
-		From:    EmailAddress{Address: from, Name: "test"},
+		From:    EmailAddress{Address: from, Name: "OTP Service"},
 		To:      to,
-		Subject: "Otp verification",
+		Subject: "OTP Verification",
 		Body:    fmt.Sprintf("Your OTP is %s. Please enter it to verify your account.", otp),
 	}
-	messageMail := BuilderMessage(contentEmail)
 
-	auth := smtp.PlainAuth("", SMTPName, SMTPPassword, SMTPHost)
+	// send using SendGrid
+	fromEmail := mail.NewEmail(contentEmail.From.Name, contentEmail.From.Address) // Sender email
+	toEmail := mail.NewEmail("Recipient", to[0])                                  // Assume sending to only one recipient
 
-	// Cấu hình TLS tùy chỉnh
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true,       // Bỏ qua xác thực chứng chỉ
-		ServerName:         SMTPHost,   // Đặt ServerName để khớp với chứng chỉ
-	}
+	plainTextContent := fmt.Sprintf("Your OTP is %s. Please enter it to verify your account.", otp)
+	htmlContent := fmt.Sprintf("<strong>Your OTP is %s. Please enter it to verify your account.</strong>", otp)
 
-	// Tạo kết nối TLS tới SMTP server
-	conn, err := tls.Dial("tcp", SMTPHost+":"+SMTPPort, tlsConfig)
+	message := mail.NewSingleEmail(fromEmail, contentEmail.Subject, toEmail, plainTextContent, htmlContent)
+	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
+
+	response, err := client.Send(message)
 	if err != nil {
-		global.Logger.Error("Failed to connect to SMTP server", zap.Error(err))
+		global.Logger.Error("Email send failed with SendGrid::", zap.Error(err))
 		return err
 	}
 
-	client, err := smtp.NewClient(conn, SMTPHost)
-	if err != nil {
-		global.Logger.Error("Failed to create SMTP client", zap.Error(err))
-		return err
+	if response.StatusCode != 202 {
+		// Handle failed response from SendGrid
+		log.Printf("Failed to send email, Status Code: %d, Body: %s", response.StatusCode, response.Body)
+		return fmt.Errorf("failed to send email, status code: %d", response.StatusCode)
 	}
 
-	// Xác thực
-	if err = client.Auth(auth); err != nil {
-		global.Logger.Error("SMTP authentication failed", zap.Error(err))
-		return err
-	}
-
-	// Cài đặt người gửi và người nhận
-	if err = client.Mail(from); err != nil {
-		return err
-	}
-	for _, addr := range to {
-		if err = client.Rcpt(addr); err != nil {
-			return err
-		}
-	}
-
-	// Gửi nội dung email
-	w, err := client.Data()
-	if err != nil {
-		return err
-	}
-
-	_, err = w.Write([]byte(messageMail))
-	if err != nil {
-		return err
-	}
-	err = w.Close()
-	if err != nil {
-		return err
-	}
-
-	client.Quit()
-
-	fmt.Print("Email sent successfully")
 	return nil
 }
