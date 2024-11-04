@@ -1,6 +1,7 @@
 package user
 
 import (
+	"go_ecommerce/internal/controlller/account"
 	"go_ecommerce/internal/wire"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup){
 
 		//Dùng dependency injection by wire
 		userRouterPublic.POST("/register", userController.Register)
+		userRouterPublic.POST("/login", account.Login.Login)
 		userRouterPublic.POST("/otp")
 	}
 	// private router
