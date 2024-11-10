@@ -16,6 +16,22 @@ definitions:
       verify_type:
         type: integer
     type: object
+  model.SetupTwoFactorAuthInput:
+    properties:
+      two_factor_auth_type:
+        type: string
+      two_factor_email:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.TwoFactorVerificationInput:
+    properties:
+      two_factor_code:
+        type: string
+      user_id:
+        type: integer
+    type: object
   model.UpdatePasswordRegisterInput:
     properties:
       user_password:
@@ -118,6 +134,68 @@ paths:
       summary: User Registration
       tags:
       - account management
+  /user/two-factor/setup:
+    post:
+      consumes:
+      - application/json
+      description: ser Setup Two Factor Authentication
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.SetupTwoFactorAuthInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponseData'
+      summary: ser Setup Two Factor Authentication
+      tags:
+      - account 2fa
+  /user/two-factor/verify:
+    post:
+      consumes:
+      - application/json
+      description: ser Verify Two Factor Authentication
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.TwoFactorVerificationInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponseData'
+      summary: ser Verify Two Factor Authentication
+      tags:
+      - account 2fa
   /user/update_pass_register:
     post:
       consumes:
