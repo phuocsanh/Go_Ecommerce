@@ -1,7 +1,6 @@
-@baseUrl="http://localhost:8002/v1"
 
 ### User Registration
-POST http://localhost:8002/v1/user/login
+POST http://localhost:8002/api/v1/user/login
 Content-Type: application/json
 
 {

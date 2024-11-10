@@ -25,7 +25,7 @@ func InitRouter() *gin.Engine {
 	managerRouter := routers.RouterGroupApp.Manager
 	userRouter := routers.RouterGroupApp.User
 
-	MainGroup := r.Group("/v1")
+	MainGroup := r.Group("/api/v1")
 	{
 		MainGroup.GET("/check_status") // tracking monitor
 	}

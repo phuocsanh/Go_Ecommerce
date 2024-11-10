@@ -1,10 +1,11 @@
 @baseUrl="http://localhost:8002/v1"
 
 ### User Registration
-POST http://localhost:8002/v1/user/register
+POST http://localhost:8002/api/v1/user/register
 Content-Type: application/json
 
 {
-    "email" : "shanktps09@gmail.com",
-    "purpose" : "test"
+    "verify_key" : "shanktps02@gmail.com",
+    "verify_urpose" : "TEST_USER",
+    "verify_type" : 1
 }

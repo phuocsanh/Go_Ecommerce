@@ -1,10 +1,17 @@
 package setting
 type Config struct {
-Server ServerSetting `mapstructure:"server"`	
-Mysql MySQLSetting `mapstructure:"mysql"`
-Logger LoggerSetting `mapstructure:"logger"`
-Redis  RedisSetting  `mapstructure:"redis"`
+	Server ServerSetting `mapstructure:"server"`	
+	Mysql MySQLSetting `mapstructure:"mysql"`
+	Logger LoggerSetting `mapstructure:"logger"`
+	Redis  RedisSetting  `mapstructure:"redis"`
+	JWT JWTSetting `mapstructure:"jwt"`
+}
 
+// JWT settings
+type JWTSetting struct {
+	TOKEN_HOUR_LIFESPAN string `mapstructure:"TOKEN_HOUR_LIFESPAN"`
+	API_SECRET_KEY string `mapstructure:"API_SECRET_KEY"`
+	JWT_EXPIRATION string `mapstructure:"JWT_EXPRIRATION"`
 }
 
 type ServerSetting struct {

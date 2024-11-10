@@ -27,11 +27,12 @@ type userRepository struct {
 func (u *userRepository) GetUserByEmail(email string) bool {
 	// row := global.Mdb.Table(TableNameGoCrmUser).Where("user_email = ?", email).First(&model.GoCrmUser{}).RowsAffected
 	// fmt.Print("row", row)
-	user, err := u.sqlc.GetUserByEmailSQLC(ctx,email)
-	if err != nil {
-		return false
-	}
-	return user.UserID != NumberNull
+	// user, err := u.sqlc.GetUserByEmailSQLC(ctx,email)
+	// if err != nil {
+	// 	return false
+	// }
+	// return user.UserID != NumberNull
+	return  1!=0
 }
 
 func NewUserRepository() IUserRepository { return &userRepository{

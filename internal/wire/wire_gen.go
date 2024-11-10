@@ -6,18 +6,18 @@
 
 package wire
 
-import (
-	"go_ecommerce/internal/controlller"
-	"go_ecommerce/internal/repo"
-	"go_ecommerce/internal/service"
-)
+// import (
+// 	"go_ecommerce/internal/controlller"
+// 	"go_ecommerce/internal/repo"
+// 	"go_ecommerce/internal/service"
+// )
 
-// Injectors from user.wire.go:
+// // Injectors from user.wire.go:
 
-func InitUserRouterHandler() (*controlller.UserController, error) {
-	iUserRepository := repo.NewUserRepository()
-	iUserAuthRepository := repo.NewUserAuthRepository()
-	iUserService := service.NewUserService(iUserRepository, iUserAuthRepository)
-	userController := controlller.NewUserController(iUserService)
-	return userController, nil
-}
+// func InitUserRouterHandler() (*controlller.UserController, error) {
+// 	iUserRepository := repo.NewUserRepository()
+// 	iUserAuthRepository := repo.NewUserAuthRepository()
+// 	iUserService := service.NewUserService(iUserRepository, iUserAuthRepository)
+// 	userController := controlller.NewUserController(iUserService)
+// 	return userController, nil
+// }

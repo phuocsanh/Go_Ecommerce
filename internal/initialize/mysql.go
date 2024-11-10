@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go_ecommerce/global"
 	"go_ecommerce/internal/common"
-	"go_ecommerce/internal/model"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -39,10 +38,10 @@ func InitMysql() {
 	// Set connection pool settings
 	// A pool is a set of pre-maintained connections that improve performance.
 	setPool()
-	genTableDAO()
+	// genTableDAO()
 
 	// Run migrations
-	migrateTables()
+	// migrateTables()
 }
 
 // setPool sets the MySQL connection pool settings
@@ -80,13 +79,13 @@ func genTableDAO()  {
 }
 
 // migrateTables runs database migrations
-func migrateTables() {
-err:= global.Mdb.AutoMigrate(
-	// &po.User{},
-	// &po.Role{},
-	&model.GoCrmUserV2{},
- )
- if err != nil {
-	fmt.Println("Migration table failed", err)
- }
-}
+// func migrateTables() {
+// err:= global.Mdb.AutoMigrate(
+// 	// &po.User{},
+// 	// &po.Role{},
+// 	&model.GoCrmUserV2{},
+//  )
+//  if err != nil {
+// 	fmt.Println("Migration table failed", err)
+//  }
+// }

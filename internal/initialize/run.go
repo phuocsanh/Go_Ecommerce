@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"go_ecommerce/global"
 
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func Run(){
+func Run() *gin.Engine {
 	LoadConfig()
 	fmt.Println("Load configuration mysql", global.Config.Mysql.Username)
 	InitLogger()
@@ -19,5 +20,6 @@ func Run(){
 	InitRedis()
 
 	r:=InitRouter()
-	r.Run(":8002")
+	return r
+	// r.Run(":8002")
 }

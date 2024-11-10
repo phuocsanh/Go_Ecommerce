@@ -35,11 +35,15 @@ docker_stop:
 	docker-compose down
 
 docker_up:
-	docker-compose up
+	docker-compose up -d
 
 dev:
 	go run ./cmd/$(APP_NAME)
-
+up_by_one:
+	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up-by-one
+# Create new migration
+create_migration:
+	@goose -dir=$(GOOSE_MIGRATION_DIR) create $(name) sql
 upse:
 	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up
 
@@ -52,4 +56,7 @@ resetse:
 sqlgen:
 	sqlc generate
 
-.PHONY: start dev downse upse resetse docker_build docker_stop docker_up
+swag:
+	swag init -g ./cmd/server/main.go -o ./cmd/swag/docs
+
+.PHONY: start dev downse upse resetse docker_build docker_stop docker_up swag

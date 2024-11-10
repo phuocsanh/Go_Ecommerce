@@ -1,65 +1,70 @@
 package service
 
 import (
-	"fmt"
-	"go_ecommerce/internal/repo"
-	"go_ecommerce/internal/utils/cryto"
-	"go_ecommerce/internal/utils/random"
-	"go_ecommerce/internal/utils/sendto"
-	"go_ecommerce/pkg/response"
-	"os"
-	"strconv"
-	"time"
+	"context"
+	"go_ecommerce/internal/model"
 )
 
+type (
+	IUserLogin interface {
+		Login(ctx context.Context, in *model.LoginInput) (codeResult int, out model.LoginOutput, err error)
+		Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error)
+		VerifyOTP(ctx context.Context, in *model.VerifyInput) (out model.VerifyOTPOutput, err error)
+		UpdatePasswordRegister(ctx context.Context, token string, password string) (userId int, err error)
 
+		// two-factor authentication
+		IsTwoFactorEnabled(ctx context.Context, userId int) (codeResult int, rs bool, err error)
+		// setup authentication
+		SetupTwoFactorAuth(ctx context.Context, in *model.SetupTwoFactorAuthInput) (codeResult int, err error)
 
-type IUserService interface {
-	Register(email string, purpose string) int
+		// Verify Two Factor Authentication
+		VerifyTwoFactorAuth(ctx context.Context, in *model.TwoFactorVerificationInput) (codeResult int, err error)
+	}
+	IUserInfo interface {
+		GetInfoByUserId(ctx context.Context) error
+		GetAllUser(ctx context.Context) error
+	}
+	IUserAdmin interface {
+		RemoveUser(ctx context.Context) error
+		FindOneUser(ctx context.Context) error
+	}
+)
+
+var (
+	localUserAdmin IUserAdmin
+	localUserInfo  IUserInfo
+	localUserLogin IUserLogin
+)
+
+func UserAdmin() IUserAdmin {
+	if localUserAdmin == nil {
+		panic("implement localUserAdmin not found for interface IUserAdmin")
+	}
+	return localUserAdmin
 }
 
-type userService struct {
-	userRepo repo.IUserRepository // Dùng interface không cần dùng *(con trỏ) vì nó đã là con trỏ rồi
-	userAuthRepo repo.IUserAuthRepository
+func InitUserAdmin(i IUserAdmin) {
+	localUserAdmin = i
 }
 
-
-func NewUserService(userRepo repo.IUserRepository, userAuthRepo repo.IUserAuthRepository) IUserService {
-	return &userService{
-		userRepo: userRepo,
-		userAuthRepo: userAuthRepo,
-		}
+func UserInfo() IUserInfo {
+	if localUserInfo == nil {
+		panic("implement localUserInfo not found for interface IUserInfo")
+	}
+	return localUserInfo
 }
 
-// Register implements IUserService.
-func (us *userService) Register(email string, purpose string) int {
-	// 0. hash email
-	hashEmail := cryto.GetHash(email)
-	fmt.Println("HashEmail %d", hashEmail)
-	// 1. check otp availability
-	// 2. User spam 
-	// 3. Check email exist on db
-	if us.userRepo.GetUserByEmail(email){
-		return response.ErrCodeUserHassExits
-	}
-	// 4. New otp ->
-	otp:= random.GenerateSixDigiOtp() 
+func InitUserInfo(i IUserInfo) {
+	localUserInfo = i
+}
 
-	if( purpose == "TEST_USER"){
-		otp = 123456
+func UserLogin() IUserLogin {
+	if localUserLogin == nil {
+		panic("implement localUserLogin not found for interface IUserLogin")
 	}
-	fmt.Printf("Otp is %d\n", otp)
+	return localUserLogin
+}
 
-	// 5. Save otp in redis with expiration	time 
-	err:= us.userAuthRepo.AddOtp(hashEmail, otp, int64(10 * time.Minute) )
-	if( err != nil){
-		return response.ErrInvalidOtp
-	}
-	// 6. Send email otp
-	err = sendto.SendTextEmailOtp([]string{email},os.Getenv("SENDER_EMAIL"),strconv.Itoa(otp))
-	
-	if err != nil{
-		return response.ErrSendEmailOtp
-	}
-	return response.ErrCodeSuccess
+func InitUserLogin(i IUserLogin) {
+	localUserLogin = i
 }
