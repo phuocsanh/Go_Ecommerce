@@ -1,7 +1,8 @@
 package response
 
 const (
-	ErrCodeSuccess      = 20001 // Success
+	CodeSuccess         = 20001 // Success
+	CodeFail            = 40000 // FAIL
 	ErrCodeParamInvalid = 20003 // ErrCodeParamInvalid
 	ErrInvalidToken     = 30001 // Token is Invalid
 	ErrInvalidOtp       = 30002
@@ -21,7 +22,8 @@ const (
 )
 
 var msg = map[int]string{
-	ErrCodeSuccess:       "success",
+	CodeSuccess:          "Success",
+	CodeFail:             "Failure",
 	ErrCodeParamInvalid:  "ErrCodeParamInvalid",
 	ErrInvalidToken:      "Token is invalid",
 	ErrCodeUserHassExits: "User has already been assigned",

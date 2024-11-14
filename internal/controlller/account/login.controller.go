@@ -5,7 +5,6 @@ import (
 	"go_ecommerce/internal/model"
 	"go_ecommerce/internal/service"
 	"go_ecommerce/pkg/response"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -65,7 +64,7 @@ func (c *cUserLogin) UpdatePasswordRegister(ctx *gin.Context) {
 		response.ErrorResponse(ctx, result, err.Error())
 		return
 	}
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, result)
+	response.SuccessResponse(ctx, response.CodeSuccess, result)
 }
 
 // Verify OTP Login By User
@@ -92,7 +91,7 @@ func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 		return
 	}
 
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, result)
+	response.SuccessResponse(ctx, response.CodeSuccess, result)
 }
 
 // User Registration documentation
@@ -108,7 +107,7 @@ func (c *cUserLogin) VerifyOTP(ctx *gin.Context) {
 func (c *cUserLogin) Register(ctx *gin.Context) {
 	var params *model.RegisterInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
-		log.Println("Err 34 ====>", err)
+
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
 		return
 	}
@@ -119,5 +118,5 @@ func (c *cUserLogin) Register(ctx *gin.Context) {
 		response.ErrorResponse(ctx, codeStatus, err.Error())
 		return
 	}
-	response.SuccessResponse(ctx, response.ErrCodeSuccess, nil)
+	response.SuccessResponse(ctx, response.CodeSuccess, nil)
 }

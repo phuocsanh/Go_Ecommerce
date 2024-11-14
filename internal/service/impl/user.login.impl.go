@@ -69,7 +69,7 @@ func (s *sUserLogin) SetupTwoFactorAuth(ctx context.Context, in *model.SetupTwoF
 	// if err != nil {
 	// 	return response.ErrCodeTwoFactorAuthSetupFailed, err
 	// }
-	return response.ErrCodeSuccess, nil
+	return response.CodeSuccess, nil
 }
 
 // Verify Two Factor Authentication
@@ -157,7 +157,7 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 		go sendto.SendTextEmailOtp([]string{infoUserTwoFactor.TwoFactorEmail.String}, os.Getenv("SENDER_EMAIL"), "111111")
 
 		out.Message = "send OTP 2FA to Email, pls het OTP by Email.."
-		return response.ErrCodeSuccess, out, nil
+		return response.CodeSuccess, out, nil
 	}
 
 	// 4. update password time
@@ -322,13 +322,13 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (cod
 		}
 		log.Println("lastIdVerifyUser", lastIdVerifyUser)
 
-		return response.ErrCodeSuccess, nil
+		return response.CodeSuccess, nil
 
 	case consts.MOBILE:
-		return response.ErrCodeSuccess, nil
+		return response.CodeSuccess, nil
 
 	}
-	return response.ErrCodeSuccess, nil
+	return response.CodeFail, nil
 }
 func (s *sUserLogin) VerifyOTP(ctx context.Context, in *model.VerifyInput) (out model.VerifyOTPOutput, err error) {
 

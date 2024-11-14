@@ -4,6 +4,7 @@ import (
 	_ "go_ecommerce/cmd/swag/docs"
 	"go_ecommerce/internal/initialize"
 
+	"github.com/gin-contrib/cors"
 	swaggerFiles "github.com/swaggo/files"     //
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
@@ -25,6 +26,13 @@ import (
 
 func main() {
 	r := initialize.Run()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},                                       // Cho phép từ mọi miền, có thể thay "*" bằng miền cụ thể
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},            // Các phương thức HTTP cho phép
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"}, // Các header cho phép
+		AllowCredentials: true,                                                // Cho phép cookie và các thông tin xác thực khác
+	}))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8002")
