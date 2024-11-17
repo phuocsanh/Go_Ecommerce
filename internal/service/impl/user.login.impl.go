@@ -411,10 +411,12 @@ func (s *sUserLogin) UpdatePasswordRegister(ctx context.Context, token string, p
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
+
 	user_id, err = newUserInfo.LastInsertId()
+
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
 
-	return 0, nil
+	return int(user_id), nil
 }
