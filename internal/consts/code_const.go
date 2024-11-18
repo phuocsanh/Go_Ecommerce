@@ -6,5 +6,5 @@ const (
 
 	TIME_OTP_REGISTER     int = 1
 	TIME_2FA_OTP_REGISTER int = 30
-	TIME_REFRESH_TOKEN    int = 1
+	TIME_REFRESH_TOKEN    int = 10
 )

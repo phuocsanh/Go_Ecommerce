@@ -117,6 +117,13 @@ func (s *sUserLogin) VerifyTwoFactorAuth(ctx context.Context, in *model.TwoFacto
 func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResult int, out model.LoginOutput, err error) {
 
 	userBase, err := s.r.GetOneUserInfo(ctx, in.UserAccount)
+	log.Printf("userBase UserPassword %v\n", userBase.UserPassword)
+	log.Printf("userBase UserSalt %v\n", userBase.UserSalt)
+	log.Printf("userBase User PASS FROTEND %v\n", in.UserPassword)
+
+	computedHash := crypto.HashPassword(in.UserPassword, userBase.UserSalt)
+	log.Printf("Computed Hash for testing: %s", computedHash)
+
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
@@ -186,12 +193,12 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 		return response.ErrCodeAuthFailed, out, err
 	}
 	// 8. create token
-	out.AccessToken, err = auth.CreateToken(subToken, "30m")
+	out.AccessToken, err = auth.CreateToken(subToken, "3h")
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
 	// Tạo refreshToken
-	refreshToken, err := auth.CreateToken(subToken, "1h")
+	refreshToken, err := auth.CreateToken(subToken, "240h")
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
@@ -201,7 +208,7 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
-	return 200, out, nil
+	return response.CodeSuccess, out, nil
 }
 
 func (s *sUserLogin) RefreshToken(ctx context.Context, refreshToken string) (out model.LoginOutput, err error) {
@@ -361,39 +368,40 @@ func (s *sUserLogin) VerifyOTP(ctx context.Context, in *model.VerifyInput) (out 
 	return out, err
 }
 func (s *sUserLogin) UpdatePasswordRegister(ctx context.Context, token string, password string) (userId int, err error) {
-	//Token is already verified
+	// 1. token is already verified : user_verify table
 	infoOTP, err := s.r.GetInfoOTP(ctx, token)
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
-	// Check isVerified OK
+	// 1 check isVerified OK
 	if infoOTP.IsVerified.Int32 == 0 {
-		return response.ErrCodeUserOtpNotExists, fmt.Errorf("User OTP not verified")
+		return response.ErrCodeUserOtpNotExists, fmt.Errorf("user OTP not verified")
 	}
-	// update user_base
-
+	// 2. check token is exists in user_base
+	//update user_base table
+	log.Println("infoOTP::", infoOTP)
+	log.Println("pass register", password)
 	userBase := database.AddUserBaseParams{}
 	userBase.UserAccount = infoOTP.VerifyKey
 	userSalt, err := crypto.GenerateSalt(16)
-
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
 	userBase.UserSalt = userSalt
 	userBase.UserPassword = crypto.HashPassword(password, userSalt)
+	log.Printf("pass UserPassword %v\n", userBase.UserPassword)
+	log.Printf("pass UserSalt %v\n", userBase.UserSalt)
 
+	// add userBase to user_base table
 	newUserBase, err := s.r.AddUserBase(ctx, userBase)
-
+	log.Println("newUserBase::", newUserBase, userBase)
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
-
 	user_id, err := newUserBase.LastInsertId()
-
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
-
 	// add user_id to user_info table
 	newUserInfo, err := s.r.AddUserHaveUserId(ctx, database.AddUserHaveUserIdParams{
 		UserID:               uint64(user_id),
@@ -407,16 +415,12 @@ func (s *sUserLogin) UpdatePasswordRegister(ctx context.Context, token string, p
 		UserEmail:            sql.NullString{String: infoOTP.VerifyKey, Valid: true},
 		UserIsAuthentication: 1,
 	})
-
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
-
 	user_id, err = newUserInfo.LastInsertId()
-
 	if err != nil {
 		return response.ErrCodeUserOtpNotExists, err
 	}
-
 	return int(user_id), nil
 }

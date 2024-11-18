@@ -5,6 +5,7 @@ import (
 	"go_ecommerce/internal/model"
 	"go_ecommerce/internal/service"
 	"go_ecommerce/pkg/response"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -53,8 +54,10 @@ func (c *cUserLogin) Login(ctx *gin.Context) {
 // @Success      200  {object}  response.ResponseData
 // @Failure      500  {object}  response.ErrorResponseData
 // @Router       /user/update_pass_register [post]
+
 func (c *cUserLogin) UpdatePasswordRegister(ctx *gin.Context) {
 	var params model.UpdatePasswordRegisterInput
+	log.Println("params  UpdatePasswordRegister", params.UserPassword)
 	if err := ctx.ShouldBindJSON(&params); err != nil {
 		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
 		return
