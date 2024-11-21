@@ -7,6 +7,7 @@ import (
 
 type (
 	IUserLogin interface {
+		RefreshToken(ctx context.Context, in *model.RefreshTokenInput) (codeResult int, out model.LoginOutput, err error)
 		Login(ctx context.Context, in *model.LoginInput) (codeResult int, out model.LoginOutput, err error)
 		Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error)
 		VerifyOTP(ctx context.Context, in *model.VerifyInput) (out model.VerifyOTPOutput, err error)

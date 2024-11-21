@@ -6,7 +6,8 @@ import (
 	"go_ecommerce/internal/service"
 	"go_ecommerce/internal/service/impl"
 )
-func InitServiceInterface(){
+
+func InitServiceInterface() {
 	queries := database.New(global.Mdbc)
 	// User serive interface
 	service.InitUserLogin(impl.NewUserLoginImpl(queries))

@@ -34,6 +34,7 @@ func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 		//Dùng dependency injection by wire
 		// userRouterPublic.POST("/register", userController.Register)
 
+		userRouterPublic.POST("/refresh_token", account.Login.RefreshToken)
 		userRouterPublic.POST("/register", account.Login.Register)
 		userRouterPublic.POST("/login", account.Login.Login)
 		userRouterPublic.POST("/verify_account", account.Login.VerifyOTP)

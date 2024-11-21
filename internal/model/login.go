@@ -1,6 +1,9 @@
 package model
 
 // two factor authentication
+type RefreshTokenInput struct {
+	RefreshToken string `json:"refreshToken"`
+}
 type SetupTwoFactorAuthInput struct {
 	UserId            uint32 `json:"user_id"`
 	TwoFactorAuthType string `json:"two_factor_auth_type"`

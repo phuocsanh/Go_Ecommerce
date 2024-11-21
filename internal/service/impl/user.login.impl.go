@@ -193,7 +193,7 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 		return response.ErrCodeAuthFailed, out, err
 	}
 	// 8. create token
-	out.AccessToken, err = auth.CreateToken(subToken, "3h")
+	out.AccessToken, err = auth.CreateToken(subToken, "30m")
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
@@ -210,55 +210,53 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 	}
 	return response.CodeSuccess, out, nil
 }
+func (s *sUserLogin) RefreshToken(ctx context.Context, in *model.RefreshTokenInput) (codeResult int, out model.LoginOutput, err error) {
 
-func (s *sUserLogin) RefreshToken(ctx context.Context, refreshToken string) (out model.LoginOutput, err error) {
-	// Giải mã refreshToken
-	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+	// Phần xử lý logic tương tự
+	parsedToken, err := jwt.Parse(in.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(global.Config.JWT.API_SECRET_KEY), nil
 	})
 
-	if err != nil || !token.Valid {
-		return out, fmt.Errorf("refreshToken không hợp lệ")
+	if err != nil || !parsedToken.Valid {
+		return response.CodeFail, out, err
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
+	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok || claims["sub"] == nil {
-		return out, fmt.Errorf("refreshToken không hợp lệ")
+		return response.CodeFail, out, err
 	}
 
 	subToken := claims["sub"].(string)
 
-	// Kiểm tra refreshToken trong Redis
 	savedRefreshToken, err := global.Rdb.Get(ctx, subToken+"_refresh").Result()
-	if err != nil || savedRefreshToken != refreshToken {
-		return out, fmt.Errorf("refreshToken không hợp lệ hoặc đã hết hạn")
+	if err != nil || savedRefreshToken != in.RefreshToken {
+		return response.CodeFail, out, err
 	}
 
 	// Tạo accessToken và refreshToken mới
 	newAccessToken, err := auth.CreateToken(subToken, "30m")
 	if err != nil {
-		return out, err
+		return response.CodeFail, out, err
 	}
 
 	err = global.Rdb.Set(ctx, subToken, newAccessToken, time.Duration(consts.TIME_2FA_OTP_REGISTER)*time.Minute).Err()
 	if err != nil {
-		return out, err
+		return response.CodeFail, out, err
 	}
 
-	newRefreshToken, err := auth.CreateToken(subToken, "1h")
+	newRefreshToken, err := auth.CreateToken(subToken, "240h")
 	if err != nil {
-		return out, err
+		return response.CodeFail, out, err
 	}
 
-	// Lưu refreshToken mới vào Redis
 	err = global.Rdb.Set(ctx, subToken+"_refresh", newRefreshToken, time.Duration(consts.TIME_REFRESH_TOKEN)*time.Hour).Err()
 	if err != nil {
-		return out, err
+		return response.CodeFail, out, err
 	}
 
 	out.AccessToken = newAccessToken
 	out.RefreshToken = newRefreshToken
-	return out, nil
+	return response.CodeSuccess, out, nil
 }
 
 func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error) {

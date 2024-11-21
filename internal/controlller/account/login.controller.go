@@ -4,6 +4,7 @@ import (
 	"go_ecommerce/global"
 	"go_ecommerce/internal/model"
 	"go_ecommerce/internal/service"
+	"go_ecommerce/internal/utils/auth"
 	"go_ecommerce/pkg/response"
 	"log"
 
@@ -16,6 +17,33 @@ import (
 var Login = new(cUserLogin)
 
 type cUserLogin struct {
+}
+
+func (c *cUserLogin) RefreshToken(ctx *gin.Context) {
+	// Lấy Authorization header
+	refreshToken, _ := auth.ExtractBearerToken(ctx)
+	log.Println("refreshToken", refreshToken)
+
+	// Kiểm tra nếu token rỗng
+	if refreshToken == "" {
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, "Refresh token is empty")
+		return
+	}
+
+	params := model.RefreshTokenInput{
+		RefreshToken: refreshToken,
+	}
+
+	// Gọi service xử lý Refresh Token
+	codeRs, dataRs, err := service.UserLogin().RefreshToken(ctx, &params)
+	log.Println("errr 39 %v", err)
+	log.Println("dataRs %v", dataRs.AccessToken)
+	if err != nil {
+		response.ErrorResponse(ctx, response.ErrCodeParamInvalid, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, codeRs, dataRs)
 }
 
 // User Login
