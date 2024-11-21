@@ -1166,3 +1166,24 @@
 {"level":"INFO","time":"2024-11-21T10:32:43.855Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
 {"level":"INFO","time":"2024-11-21T10:32:43.855Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
 {"level":"INFO","time":"2024-11-21T10:32:43.861Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}
+{"level":"DEBUG","time":"2024-11-21T13:48:51.723Z","caller":"initialize/run.go:16","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-11-21T13:48:51.733Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T13:48:51.734Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T13:48:51.737Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}
+{"level":"ERROR","time":"2024-11-21T14:03:12.004Z","caller":"account/login.controller.go:148","msg":"Error registering user OTP","error":"user already registered","stacktrace":"go_ecommerce/internal/controlller/account.(*cUserLogin).Register\n\t/app/internal/controlller/account/login.controller.go:148\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3210\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2092"}
+{"level":"DEBUG","time":"2024-11-21T14:04:45.301Z","caller":"initialize/run.go:16","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-11-21T14:04:45.311Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:04:45.312Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:04:45.314Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}
+{"level":"DEBUG","time":"2024-11-21T14:12:54.781Z","caller":"initialize/run.go:16","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-11-21T14:12:54.847Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:12:54.847Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:12:54.850Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}
+{"level":"DEBUG","time":"2024-11-21T14:44:50.607Z","caller":"initialize/run.go:16","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-11-21T14:44:50.615Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:44:50.616Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T14:44:50.618Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}
+{"level":"DEBUG","time":"2024-11-21T15:00:23.756Z","caller":"initialize/run.go:16","msg":"config log ok","ok":"success"}
+{"level":"INFO","time":"2024-11-21T15:00:23.768Z","caller":"initialize/mysql.go:34","msg":"MySQL Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T15:00:23.769Z","caller":"initialize/mysqlc.go:31","msg":"MySQLC Initialized Successfully"}
+{"level":"INFO","time":"2024-11-21T15:00:23.772Z","caller":"initialize/redis.go:50","msg":"value score is::","score":"100"}

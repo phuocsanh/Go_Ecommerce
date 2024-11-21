@@ -176,7 +176,7 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 
 	// 5. Create UUID User
 	subToken := utils.GenerateCliTokenUUID(int(userBase.UserID))
-	log.Println("subtoken:", subToken)
+	log.Printf("Generated subToken: %s", subToken)
 	// 6. get user_info table
 	infoUser, err := s.r.GetUser(ctx, uint64(userBase.UserID))
 	if err != nil {
@@ -187,25 +187,31 @@ func (s *sUserLogin) Login(ctx context.Context, in *model.LoginInput) (codeResul
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, fmt.Errorf("convert to json failed: %v", err)
 	}
+	const accessTokenTTL = 30 * time.Minute
+	const refreshTokenTTL = 7 * 24 * time.Hour
 	// 7. give infoUserJson to redis with key = subToken
-	err = global.Rdb.Set(ctx, subToken, infoUserJson, time.Duration(consts.TIME_2FA_OTP_REGISTER)*time.Minute).Err()
+	err = global.Rdb.Set(ctx, subToken, infoUserJson, refreshTokenTTL).Err()
 	if err != nil {
+		log.Printf("err redis subToken: %v", err)
+
 		return response.ErrCodeAuthFailed, out, err
 	}
+
 	// 8. create token
-	out.AccessToken, err = auth.CreateToken(subToken, "30m")
+	out.AccessToken, err = auth.CreateToken(subToken, accessTokenTTL.String())
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
 	// Tạo refreshToken
-	refreshToken, err := auth.CreateToken(subToken, "240h")
+	refreshToken, err := auth.CreateToken(subToken, refreshTokenTTL.String())
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, err
 	}
 	out.RefreshToken = refreshToken
 
-	err = global.Rdb.Set(ctx, subToken+"_refresh", refreshToken, time.Duration(consts.TIME_REFRESH_TOKEN)*time.Hour).Err()
+	err = global.Rdb.Set(ctx, subToken+"_refresh", refreshToken, refreshTokenTTL).Err()
 	if err != nil {
+		log.Printf("err redis subToken__refresh: %v", err)
 		return response.ErrCodeAuthFailed, out, err
 	}
 	return response.CodeSuccess, out, nil
@@ -216,6 +222,7 @@ func (s *sUserLogin) RefreshToken(ctx context.Context, in *model.RefreshTokenInp
 	parsedToken, err := jwt.Parse(in.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(global.Config.JWT.API_SECRET_KEY), nil
 	})
+	log.Println("parsedToken:", parsedToken)
 
 	if err != nil || !parsedToken.Valid {
 		return response.CodeFail, out, err
@@ -227,29 +234,37 @@ func (s *sUserLogin) RefreshToken(ctx context.Context, in *model.RefreshTokenInp
 	}
 
 	subToken := claims["sub"].(string)
-
+	log.Println("subToken 231:", subToken)
 	savedRefreshToken, err := global.Rdb.Get(ctx, subToken+"_refresh").Result()
 	if err != nil || savedRefreshToken != in.RefreshToken {
+
+		log.Println("in.RefreshToken:", in.RefreshToken)
+		log.Println("savedRefreshToken:", savedRefreshToken)
+
 		return response.CodeFail, out, err
 	}
-
+	const accessTokenTTL = 30 * time.Minute
+	const refreshTokenTTL = 7 * 24 * time.Hour
 	// Tạo accessToken và refreshToken mới
-	newAccessToken, err := auth.CreateToken(subToken, "30m")
+	newAccessToken, err := auth.CreateToken(subToken, accessTokenTTL.String())
+	log.Println("newAccessToken:", newAccessToken)
 	if err != nil {
 		return response.CodeFail, out, err
 	}
 
-	err = global.Rdb.Set(ctx, subToken, newAccessToken, time.Duration(consts.TIME_2FA_OTP_REGISTER)*time.Minute).Err()
+	err = global.Rdb.Set(ctx, subToken, newAccessToken, accessTokenTTL).Err()
 	if err != nil {
 		return response.CodeFail, out, err
 	}
 
-	newRefreshToken, err := auth.CreateToken(subToken, "240h")
+	newRefreshToken, err := auth.CreateToken(subToken, refreshTokenTTL.String())
+	log.Println("newRefreshToken:", newRefreshToken)
+
 	if err != nil {
 		return response.CodeFail, out, err
 	}
 
-	err = global.Rdb.Set(ctx, subToken+"_refresh", newRefreshToken, time.Duration(consts.TIME_REFRESH_TOKEN)*time.Hour).Err()
+	err = global.Rdb.Set(ctx, subToken+"_refresh", newRefreshToken, refreshTokenTTL).Err()
 	if err != nil {
 		return response.CodeFail, out, err
 	}
